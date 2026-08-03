@@ -26,8 +26,5 @@ out/
 Thumbs.db
 Desktop.ini
 
-# SQLite database files
-*.db
-*.db-journal
-*.db-wal
-*.db-shm
+# Generated transaction receipts
+receipts/
