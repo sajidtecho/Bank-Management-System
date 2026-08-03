@@ -36,35 +36,35 @@ graph TD
     classDef util fill:#eceff1,stroke:#455a64,stroke-width:2px;
 
     %% Define packages/layers
-    subgraph App Bootstrapper
+    subgraph app_bootstrapper["App Bootstrapper"]
         Main[Main.java]:::app
     end
 
-    subgraph Presentation Layer
+    subgraph presentation_layer["Presentation Layer"]
         ConsoleMenu[ConsoleMenu.java]:::ui
         ConsoleTable[ConsoleTable.java]:::ui
     end
 
-    subgraph Service Layer (Business Logic)
-        BankService[<< interface >> <br> BankService]:::service
+    subgraph service_layer["Service Layer (Business Logic)"]
+        BankService["&laquo;interface&raquo;<br>BankService"]:::service
         BankServiceImpl[BankServiceImpl.java]:::service
     end
 
-    subgraph Repository Layer (Data Persistence)
-        AccountRepository[<< interface >> <br> AccountRepository]:::repo
+    subgraph repository_layer["Repository Layer (Data Persistence)"]
+        AccountRepository["&laquo;interface&raquo;<br>AccountRepository"]:::repo
         AccountRepositoryImpl[AccountRepositoryImpl.java]:::repo
     end
 
-    subgraph Model Layer (Domain Entities)
+    subgraph model_layer["Model Layer (Domain Entities)"]
         Account[Account.java]:::model
         Transaction[Transaction.java]:::model
-        AccountType[<< enum >> <br> AccountType]:::model
-        TransactionType[<< enum >> <br> TransactionType]:::model
+        AccountType["&laquo;enum&raquo;<br>AccountType"]:::model
+        TransactionType["&laquo;enum&raquo;<br>TransactionType"]:::model
     end
 
-    subgraph Utility & Exceptions
+    subgraph utility_exceptions["Utility & Exceptions"]
         ValidationUtil[ValidationUtil.java]:::util
-        Exceptions[Custom Exceptions <br> - InsufficientBalance <br> - AccountNotFound <br> - InvalidAmount <br> - DuplicateAccount <br> - InvalidPin]:::util
+        Exceptions["Custom Exceptions<br>- InsufficientBalance<br>- AccountNotFound<br>- InvalidAmount<br>- DuplicateAccount<br>- InvalidPin"]:::util
     end
 
     %% Dependency Arrows
@@ -78,16 +78,16 @@ graph TD
     AccountRepositoryImpl -- implements --> AccountRepository
     AccountRepositoryImpl --> Account
     AccountRepositoryImpl --> Transaction
-    AccountRepositoryImpl --> Utility
+    AccountRepositoryImpl --> utility_exceptions
     Account --> Transaction
     Account --> AccountType
     Transaction --> TransactionType
 
-    style App Bootstrapper fill:#eceff1,stroke:#37474f,stroke-width:1px,stroke-dasharray: 5 5;
-    style Presentation Layer fill:#efebe9,stroke:#4e342e,stroke-width:1px,stroke-dasharray: 5 5;
-    style Service Layer fill:#fbe9e7,stroke:#d84315,stroke-width:1px,stroke-dasharray: 5 5;
-    style Repository Layer fill:#ede7f6,stroke:#4a148c,stroke-width:1px,stroke-dasharray: 5 5;
-    style Model Layer fill:#fce4ec,stroke:#880e4f,stroke-width:1px,stroke-dasharray: 5 5;
+    style app_bootstrapper fill:#eceff1,stroke:#37474f,stroke-width:1px,stroke-dasharray: 5 5;
+    style presentation_layer fill:#efebe9,stroke:#4e342e,stroke-width:1px,stroke-dasharray: 5 5;
+    style service_layer fill:#fbe9e7,stroke:#d84315,stroke-width:1px,stroke-dasharray: 5 5;
+    style repository_layer fill:#ede7f6,stroke:#4a148c,stroke-width:1px,stroke-dasharray: 5 5;
+    style model_layer fill:#fce4ec,stroke:#880e4f,stroke-width:1px,stroke-dasharray: 5 5;
 ```
 
 ---
