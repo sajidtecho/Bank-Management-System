@@ -10,7 +10,7 @@ The **Bank Management System** provides secure, terminal-based banking solutions
 
 ### 🌟 Key Highlights
 - **100% Core Java:** Built using standard library constructs with Java 17 features (compatible down to Java 8).
-- **Zero-DB File Persistence:** Uses `BufferedReader`, `BufferedWriter`, and `PrintWriter` to securely store accounts and transactions in structured text files.
+- **SQLite SQL Database Persistence:** Uses JDBC to communicate with an embedded, zero-configuration local database file (`bank.db`).
 - **Layered Architecture:** Enforces separation of concerns by segregating Presentation (Menu), Business Logic (Service), Persistence (Repository), and Domain Models.
 - **Visual Terminal Tables:** Displays sorted queries, account summaries, and transaction logs using custom terminal table formatters.
 
@@ -99,7 +99,7 @@ The interactive logic flow shows the lifecycle of the application, starting from
 ```mermaid
 flowchart TD
     %% Node definitions
-    Start([Application Started]) --> LoadData[Load Data from accounts.txt]
+    Start([Application Started]) --> LoadData[Initialize SQLite Database]
     LoadData --> MainMenu{Main Menu}
     
     %% Main Menu Options
@@ -164,7 +164,7 @@ flowchart TD
 
 | Module | Sub-feature | Description / Validation | Status |
 | :--- | :--- | :--- | :---: |
-| **System** | Load / Save Data | Auto-loads on boot. Auto-saves transactions & profiles using Buffered Writers/Readers. | `Planned` |
+| **System** | SQLite Persistence | Auto-loads/saves account and transaction data automatically from/to local SQL tables. | `Planned` |
 | **Account** | Create Account | Generates 10-digit unique numbers. Fields: Name, Age, Email, Gender, Phone, Address, Type, Balance, PIN. | `Planned` |
 | **Auth** | Login | Account Number + PIN. Locks account on **3 consecutive incorrect attempts**. | `Planned` |
 | **Transactions** | Deposit | Validates positive amount, logs transaction. | `Planned` |
@@ -187,7 +187,7 @@ flowchart TD
 - **Custom Exception Handling:** Built specialized exception classes extending `Exception` to signal application-specific validation failures.
 - **Java Collections & Streams:** Used `ArrayList` and `HashMap` for storing and managing accounts. Heavy reliance on Java Streams API for filtering, searching, and sorting records.
 - **Modern Java API:** Used `LocalDate` and `LocalDateTime` for handling creation times and transactions timestamps.
-- **File I/O Streams:** Employs standard I/O writers (`BufferedWriter`, `FileWriter`, `PrintWriter`) and readers (`BufferedReader`, `FileReader`) to format flat files.
+- **Database Persistence & JDBC:** Employs JDBC drivers and SQLite databases. Uses `PreparedStatement`, transactions (`commit`/`rollback`), connection management, and SQL query syntax.
 
 ---
 
@@ -228,9 +228,9 @@ BankManagementSystem/
 │   │   │           │   └── BankServiceImpl.java
 │   │   │           └── utility/
 │   │   │               ├── ConsoleTable.java
+│   │   │               ├── DatabaseUtil.java
 │   │   │               └── ValidationUtil.java
 │   │   └── resources/
-│   │       └── accounts.txt
 ```
 
 ---
@@ -259,7 +259,7 @@ BankManagementSystem/
 ---
 
 ## 🔮 Future Enhancements
-- Integrate a database (MySQL/PostgreSQL) using JDBC or Spring Data JPA.
+- Upgrade to client-server RDBMS databases (MySQL/PostgreSQL) or configure Spring Data JPA.
 - Build a graphical user interface (GUI) using JavaFX or a Web Dashboard using Spring Boot and Thymeleaf.
 - Secure customer PINs using hash algorithms (e.g., BCrypt).
 - Introduce multi-currency accounts and loan interest rate calculation modules.
@@ -268,6 +268,6 @@ BankManagementSystem/
 
 ## 🎓 Learning Outcomes
 - Advanced understanding of **Layered Architectures** in Java.
-- Implementing file-handling techniques while preserving transactional safety.
+- Implementing database-handling techniques using SQL and JDBC while preserving transactional safety.
 - Hand-on experience resolving design rules using SOLID and Clean Coding standards.
 - Practiced parsing objects to strings (serialization) and reading strings back into object instances (deserialization).
