@@ -10,7 +10,7 @@ The **Bank Management System** provides secure, terminal-based banking solutions
 
 ### 🌟 Key Highlights
 - **100% Core Java:** Built using standard library constructs with Java 17 features (compatible down to Java 8).
-- **SQLite SQL Database Persistence:** Uses JDBC to communicate with an embedded, zero-configuration local database file (`bank.db`).
+- **Flat File Persistence:** Uses `BufferedReader`, `BufferedWriter`, and `PrintWriter` to securely store accounts, transactions, and admin profiles in structured files.
 - **Layered Architecture:** Enforces separation of concerns by segregating Presentation (Menu), Business Logic (Service), Persistence (Repository), and Domain Models.
 - **Visual Terminal Tables:** Displays sorted queries, account summaries, and transaction logs using custom terminal table formatters.
 
@@ -99,7 +99,7 @@ The interactive logic flow shows the lifecycle of the application, starting from
 ```mermaid
 flowchart TD
     %% Node definitions
-    Start([Application Started]) --> LoadData[Initialize SQLite Database]
+    Start([Application Started]) --> LoadData[Load Admins & Accounts from Files]
     LoadData --> MainMenu{Main Menu}
     
     %% Main Menu Options
@@ -164,17 +164,17 @@ flowchart TD
 
 | Module | Sub-feature | Description / Validation | Status |
 | :--- | :--- | :--- | :---: |
-| **System** | SQLite Persistence | Auto-loads/saves account and transaction data automatically from/to local SQL tables. | `Planned` |
-| **Account** | Create Account | Generates 10-digit unique numbers. Fields: Name, Age, Email, Gender, Phone, Address, Type, Balance, PIN. | `Planned` |
-| **Auth** | Login | Account Number + PIN. Locks account on **3 consecutive incorrect attempts**. | `Planned` |
-| **Transactions** | Deposit | Validates positive amount, logs transaction. | `Planned` |
-| | Withdraw | Prevents overdraft, maintains minimum balance guidelines, logs transaction. | `Planned` |
-| | Transfer | Atomically deducts sender, credits receiver, validates receiver. Logs transactions. | `Planned` |
-| | History | Tabular print with Date, Time, Type, Amount, and Running Balance. | `Planned` |
-| **Management** | Search | Search records by Account Number, Name, or Phone using Java Streams. | `Planned` |
-| | Update | Edit Phone, Email, Address, or PIN. | `Planned` |
-| | Delete | Confirmation prompt. Removes record and triggers auto-save. | `Planned` |
-| | View All | Displays accounts in tabular structure. Multi-sorting using Custom `Comparators`. | `Planned` |
+| **System** | Flat File Persistence | Auto-loads/saves account, transaction, and admin data automatically from/to local files. | `Completed` |
+| **Account** | Create Account | Generates 10-digit unique numbers. Fields: Name, Age, Email, Gender, Phone, Address, Type, Balance, PIN. | `Completed` |
+| **Auth** | Login | Account Number + PIN. Locks account on **3 consecutive incorrect attempts**. | `Completed` |
+| **Transactions** | Deposit | Validates positive amount, logs transaction, generates file receipt. | `Completed` |
+| | Withdraw | Prevents overdraft, maintains minimum balance guidelines, logs transaction, generates receipt. | `Completed` |
+| | Transfer | Atomically deducts sender, credits receiver, validates receiver. Logs transactions, generates receipts. | `Completed` |
+| | History | Tabular print with Date, Time, Type, Amount, and Running Balance. | `Completed` |
+| **Management** | Search | Search records by Account Number, Name, or Phone using Java Streams. | `Completed` |
+| | Update | Edit Phone, Email, Address, or PIN. | `Completed` |
+| | Delete | Confirmation prompt. Removes record and triggers auto-save. | `Completed` |
+| | View All | Displays accounts in tabular structure. Multi-sorting using Custom `Comparators`. | `Completed` |
 
 ---
 
@@ -187,7 +187,7 @@ flowchart TD
 - **Custom Exception Handling:** Built specialized exception classes extending `Exception` to signal application-specific validation failures.
 - **Java Collections & Streams:** Used `ArrayList` and `HashMap` for storing and managing accounts. Heavy reliance on Java Streams API for filtering, searching, and sorting records.
 - **Modern Java API:** Used `LocalDate` and `LocalDateTime` for handling creation times and transactions timestamps.
-- **Database Persistence & JDBC:** Employs JDBC drivers and SQLite databases. Uses `PreparedStatement`, transactions (`commit`/`rollback`), connection management, and SQL query syntax.
+- **File I/O Persistence:** Employs `BufferedReader`, `BufferedWriter`, and `PrintWriter` streams to store records cleanly to flat text files.
 
 ---
 
@@ -200,37 +200,52 @@ BankManagementSystem/
 ├── pom.xml
 ├── .gitignore
 ├── LICENSE
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── bank/
-│   │   │           ├── app/
-│   │   │           │   └── Main.java
-│   │   │           ├── exception/
-│   │   │           │   ├── AccountNotFoundException.java
-│   │   │           │   ├── DuplicateAccountException.java
-│   │   │           │   ├── InsufficientBalanceException.java
-│   │   │           │   ├── InvalidAmountException.java
-│   │   │           │   └── InvalidPinException.java
-│   │   │           ├── menu/
-│   │   │           │   └── ConsoleMenu.java
-│   │   │           ├── model/
-│   │   │           │   ├── Account.java
-│   │   │           │   ├── AccountType.java
-│   │   │           │   ├── Transaction.java
-│   │   │           │   └── TransactionType.java
-│   │   │           ├── repository/
-│   │   │           │   ├── AccountRepository.java
-│   │   │           │   └── AccountRepositoryImpl.java
-│   │   │           ├── service/
-│   │   │           │   ├── BankService.java
-│   │   │           │   └── BankServiceImpl.java
-│   │   │           └── utility/
-│   │   │               ├── ConsoleTable.java
-│   │   │               ├── DatabaseUtil.java
-│   │   │               └── ValidationUtil.java
-│   │   └── resources/
+├── receipts/                      # Generated customer transaction receipts (TXNxxxx.txt)
+└── src/
+    └── main/
+        ├── java/
+        │   └── com/
+        │       └── bank/
+        │           ├── app/
+        │           │   └── Main.java
+        │           ├── controller/
+        │           │   └── BankController.java
+        │           ├── exception/
+        │           │   ├── AccountLockedException.java
+        │           │   ├── AccountNotFoundException.java
+        │           │   ├── DuplicateAccountException.java
+        │           │   ├── InsufficientBalanceException.java
+        │           │   ├── InvalidAmountException.java
+        │           │   └── InvalidPinException.java
+        │           ├── menu/
+        │           │   └── ConsoleMenu.java
+        │           ├── model/
+        │           │   ├── Account.java
+        │           │   ├── AccountType.java
+        │           │   ├── Admin.java
+        │           │   ├── Customer.java
+        │           │   ├── CurrentAccount.java
+        │           │   ├── Role.java
+        │           │   ├── SavingsAccount.java
+        │           │   ├── Transaction.java
+        │           │   └── TransactionType.java
+        │           ├── repository/
+        │           │   ├── AccountRepository.java
+        │           │   └── AccountRepositoryImpl.java
+        │           ├── service/
+        │           │   ├── BankService.java
+        │           │   └── BankServiceImpl.java
+        │           └── utility/
+        │               ├── AccountNumberGenerator.java
+        │               ├── ConsoleTable.java
+        │               ├── DateTimeUtil.java
+        │               ├── FileUtil.java
+        │               ├── ReceiptGenerator.java
+        │               └── ValidationUtil.java
+        └── resources/
+            ├── accounts.txt       # Customer accounts database file
+            ├── admins.txt         # Admin credentials database file
+            └── transactions.txt   # Global transaction records database file
 ```
 
 ---
