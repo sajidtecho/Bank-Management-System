@@ -1,0 +1,30 @@
+# Target folder
+target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.metadata/
+.classpath
+.project
+.settings/
+*.tmp
+*.bak
+*.swp
+*~
+.DS_Store
+
+# Log files
+*.log
+
+# OS temporary files
+Thumbs.db
+Desktop.ini
+
+# App data / local config
+resources/accounts.txt
