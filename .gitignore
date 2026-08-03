@@ -26,5 +26,8 @@ out/
 Thumbs.db
 Desktop.ini
 
-# App data / local config
-resources/accounts.txt
+# SQLite database files
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
