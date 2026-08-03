@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview & Concept Guide: Bank Management System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #fcfcfc;
+        }
+        h1, h2, h3 {
+            color: #0d47a1;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+        h1 {
+            font-size: 2.2em;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #0d47a1;
+        }
+        h2 {
+            font-size: 1.6em;
+            margin-top: 40px;
+        }
+        h3 {
+            font-size: 1.2em;
+            color: #1565c0;
+            border: none;
+            padding: 0;
+        }
+        blockquote {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            padding: 15px 20px;
+            font-style: italic;
+            font-size: 1.1em;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+        }
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            background-color: #eeeeee;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.95em;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 12px 15px;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #0d47a1;
+            font-weight: bold;
+        }
+        tr:nth-of-type(even) {
+            background-color: #f9f9f9;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        @media print {
+            body {
+                padding: 0;
+                background-color: #fff;
+            }
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+            pre, table {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Interview & Concept Guide: Bank Management System 🎓</h1>
+    <p style="text-align: center; color: #666; font-style: italic;">Designed for placement preparation at Cognizant, TCS, Accenture, Wipro, Infosys, and Deloitte.</p>
+
+    <blockquote>
+        <strong>The 60-Second Project Pitch:</strong><br>
+        "I built a production-quality <strong>Bank Management System</strong> in Core Java using a <strong>decoupled layered architecture</strong> (Controller-Service-Repository pattern). It simulates a banking system with role-based logins (Admin and Customer), transactional security, auto-generated account numbers, and transaction logs. Instead of a database, I implemented a robust, synchronized flat-file database handler using Java File I/O. The project is designed strictly following <strong>SOLID principles</strong> and core <strong>Object-Oriented Programming (OOP)</strong> patterns. I used modern Java features like the <strong>Streams API, Lambdas, Optionals, and the Java Time API</strong> to make the code clean, thread-safe, and highly maintainable."
+    </blockquote>
+
+    <h2>🏗️ 1. Layered Architecture (De-coupling)</h2>
+    <p>This project is structured into 5 distinct layers to enforce separation of concerns:</p>
+    <ul>
+        <li><strong>Presentation Layer (UI):</strong> Displays console menus and handles scanner inputs (<code>ConsoleMenu</code>).</li>
+        <li><strong>Controller Layer:</strong> Intercepts incoming requests and handles presentation exception mappings (<code>BankController</code>).</li>
+        <li><strong>Service Layer:</strong> Validates constraints and executes bank business rules (<code>BankServiceImpl</code>).</li>
+        <li><strong>Repository Layer:</strong> Manages read/write connections to files (<code>AccountRepositoryImpl</code>).</li>
+        <li><strong>Storage Layer:</strong> Local flat files (<code>accounts.txt</code>, <code>transactions.txt</code>, <code>admins.txt</code>).</li>
+    </ul>
+
+    <h2>🧩 2. Core OOP Principles Applied</h2>
+
+    <h3>A. Encapsulation</h3>
+    <p>Wrapping data (variables) and code (methods) together as a single unit. In our code, in <code>User.java</code> and <code>Account.java</code>, all properties (such as <code>balance</code>, <code>pin</code>, <code>locked</code>) are declared <code>private</code>. They can only be accessed or updated using validated getters and setters.</p>
+
+    <h3>B. Inheritance</h3>
+    <p>Subclassing parent attributes to reuse code. In our project:</p>
+    <ul>
+        <li><code>User</code> (Abstract class) &rarr; Extended by <code>Customer</code> and <code>Admin</code>.</li>
+        <li><code>Account</code> (Abstract class) &rarr; Extended by <code>SavingsAccount</code> and <code>CurrentAccount</code>.</li>
+    </ul>
+
+    <h3>C. Polymorphism</h3>
+    <p>The ability of an object to take on many forms. At runtime, calling the abstract method <code>account.getMinBalance()</code> dynamically executes the correct subclass logic (returning <code>500.0</code> for <code>SavingsAccount</code> or <code>2000.0</code> for <code>CurrentAccount</code>).</p>
+
+    <h3>D. Abstraction</h3>
+    <p>Hiding implementation complexity. In our project, layers interact through contracts like the <code>BankService</code> and <code>AccountRepository</code> interfaces without knowing how the underlying data is queried or processed.</p>
+
+    <h2>⚡ 3. SOLID Principles Implemented</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Principle</th>
+                <th>Concept</th>
+                <th>Implementation in our Project</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>S</strong>ingle Responsibility</td>
+                <td>A class should do exactly one thing.</td>
+                <td><code>ConsoleMenu</code> handles UI; <code>ValidationUtil</code> checks formats; <code>FileUtil</code> handles streams; <code>BankServiceImpl</code> holds business rules.</td>
+            </tr>
+            <tr>
+                <td><strong>O</strong>pen/Closed</td>
+                <td>Open for extension, closed for modification.</td>
+                <td>To add a new type (e.g., <code>JointAccount</code>), we simply extend <code>Account</code> without modifying the parent class.</td>
+            </tr>
+            <tr>
+                <td><strong>L</strong>iskov Substitution</td>
+                <td>Subclasses must substitute parent classes cleanly.</td>
+                <td>We pass <code>SavingsAccount</code> and <code>CurrentAccount</code> objects anywhere an <code>Account</code> instance is expected.</td>
+            </tr>
+            <tr>
+                <td><strong>I</strong>nterface Segregation</td>
+                <td>Interfaces should be focused and split.</td>
+                <td><code>BankService</code> and <code>AccountRepository</code> expose precise methods required by callers.</td>
+            </tr>
+            <tr>
+                <td><strong>D</strong>ependency Inversion</td>
+                <td>Depend on abstractions, not concretions.</td>
+                <td><code>BankServiceImpl</code> depends on the interface <code>AccountRepository</code>. This makes it trivial to switch from flat files to a SQL database repository.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>☕ 4. Modern Java 8+ Features Used</h2>
+    <ul>
+        <li><strong>Streams API & Lambdas:</strong> Used for clean data query operations (e.g., filtering matches in <code>searchCustomers(query)</code>).</li>
+        <li><strong>Optional Wrapper:</strong> Used to indicate missing values safely (e.g., <code>Optional&lt;Customer&gt;</code>) and prevent <code>NullPointerException</code>.</li>
+        <li><strong>Java Time API (LocalDate/LocalDateTime):</strong> Used for immutable, thread-safe datetime calculations.</li>
+        <li><strong>Method References:</strong> Used to simplify lambda syntax (e.g., <code>User::getName</code>).</li>
+    </ul>
+
+    <h2>💾 5. File Handling & Concurrency</h2>
+    <ul>
+        <li><strong>Buffered Streams:</strong> Uses <code>BufferedReader</code> and <code>BufferedWriter</code> wrapped around <code>FileReader</code>/<code>FileWriter</code> for optimal file character processing.</li>
+        <li><strong>Synchronization:</strong> When operations modify balance states, in-memory collections sync instantly to files via <code>repository.saveData()</code>.</li>
+        <li><strong>Thread Safety:</strong> The generation of account numbers is declared <code>synchronized</code> to prevent race conditions.</li>
+    </ul>
+
+    <h2>❓ 6. Common Interview Questions</h2>
+    
+    <h3>Q: Why did you use File Handling instead of a SQL Database?</h3>
+    <p><strong>A:</strong> "I chose File Handling to demonstrate my core knowledge of Java I/O streams and custom parsing. However, because the application is decoupled through the <code>AccountRepository</code> interface, we can shift to SQLite or MySQL by writing a new implementation class without changing a single line of business logic."</p>
+
+    <h3>Q: How did you implement transactional safety during transfers?</h3>
+    <p><strong>A:</strong> "The transfer method in <code>BankServiceImpl</code> acts atomically. It validates both accounts exist, verifies available balances, and deducts the sender and credits the receiver together. If any validation fails, an exception is thrown before any files are updated, preventing partial edits."</p>
+
+    <h3>Q: What is the difference between checked and unchecked exceptions?</h3>
+    <p><strong>A:</strong> "Checked exceptions (e.g., <code>InsufficientBalanceException</code>) are verified at compile-time, forcing the developer to handle them using try-catch blocks. Unchecked exceptions (e.g., <code>NullPointerException</code>) happen at runtime and usually represent programming bugs."</p>
+
+</body>
+</html>
