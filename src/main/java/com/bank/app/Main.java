@@ -3,7 +3,7 @@ package com.bank.app;
 import com.bank.controller.BankController;
 import com.bank.menu.ConsoleMenu;
 import com.bank.repository.AccountRepository;
-import com.bank.repository.AccountRepositoryImpl;
+import com.bank.repository.DatabaseAccountRepository;
 import com.bank.service.BankService;
 import com.bank.service.BankServiceImpl;
 
@@ -12,8 +12,8 @@ import com.bank.service.BankServiceImpl;
  */
 public class Main {
     public static void main(String[] args) {
-        // 1. Initialize data layer (loads from flat files automatically)
-        AccountRepository repository = new AccountRepositoryImpl();
+        // 1. Initialize data layer (loads from database automatically)
+        AccountRepository repository = new DatabaseAccountRepository();
 
         // 2. Initialize service layer
         BankService service = new BankServiceImpl(repository);
